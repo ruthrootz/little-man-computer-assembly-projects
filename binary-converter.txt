@@ -1,0 +1,78 @@
+START   INP
+THIRTYTWO SUB THIRTYTWO_D # subtract 32 and see if answer is positive
+        STA NUMBER
+        BRP YESTHIRTYTWO
+        ADD THIRTYTWO_D
+        STA NUMBER
+        BRA SIXTEEN
+YESTHIRTYTWO LDA PARTONE # number was larger than or equal to 32
+        ADD HUNDRED_D
+        STA PARTONE
+        LDA NUMBER
+SIXTEEN SUB SIXTEEN_D # subtract 16 and see if answer is positive
+        STA NUMBER
+        BRP YESSIXTEEN
+        ADD SIXTEEN_D
+        STA NUMBER
+        BRA EIGHT
+YESSIXTEEN LDA PARTONE # number was larger than or equal to 16
+        ADD TEN_D
+        STA PARTONE
+        LDA NUMBER
+EIGHT   SUB EIGHT_D # subtract 8 and see if answer is positive
+        STA NUMBER
+        BRP YESEIGHT
+        ADD EIGHT_D
+        STA NUMBER
+        BRA FOUR
+YESEIGHT LDA PARTONE # number was larger than or equal to 8
+        ADD ONE_D
+        STA PARTONE
+        LDA NUMBER
+FOUR    SUB FOUR_D # subtract 4 and see if answer is positive
+        STA NUMBER
+        BRP YESFOUR
+        ADD FOUR_D
+        STA NUMBER
+        BRA TWO
+YESFOUR LDA PARTTWO # number was larger than or equal to 4
+        ADD HUNDRED_D
+        STA PARTTWO
+        LDA NUMBER
+TWO     SUB TWO_D # subtract 2 and see if answer is positive
+        STA NUMBER
+        BRP YESTWO
+        ADD TWO_D
+        STA NUMBER
+        BRA ONE
+YESTWO  LDA PARTTWO # number was larger than or equal to 2
+        ADD TEN_D
+        STA PARTTWO
+        LDA NUMBER
+ONE     SUB ONE_D # subtract 1 and see if answer is positive
+        BRZ YESONE
+        BRA END
+YESONE  LDA PARTTWO # number was larger than or equal to 1
+        ADD ONE_D
+        STA PARTTWO
+END     LDA PARTONE
+        OUT
+        LDA PARTTWO
+        OUT
+        LDA CLEAR # reset result and number values
+        STO PARTONE
+        STO PARTTWO
+        STO NUMBER
+        BRA START
+THIRTYTWO_D DAT 032
+SIXTEEN_D DAT 016
+EIGHT_D DAT 008
+FOUR_D  DAT 004
+TWO_D   DAT 002
+ONE_D   DAT 001
+HUNDRED_D DAT 100
+TEN_D   DAT 010
+PARTONE DAT 000 # first half of answer
+PARTTWO DAT 000 # second half of answer
+NUMBER  DAT 000 # holds current value
+CLEAR   DAT 000 # used to clear values at the end
