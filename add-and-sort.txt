@@ -1,0 +1,91 @@
+start   LDA lda1 # load the instruction in lda1
+        STA outputList # store it in outputList
+        LDA sta1 # load the instruction in sta1
+        STA store # store it in store
+inputLoop INP # start of input loop
+store   DAT 392 # execute "store input in 92"
+        ADD sum # add the input to sum
+        STA sum # store new sum
+        LDA store # load the instruction in store
+        ADD increment # add 1 to it so that the instruction points to the next data slot
+        STA store # store the instruction
+        LDA listSize # load listSize
+        ADD increment # add 1 to it
+        STA listSize # store listSize
+        SUB four # subtract 4 from listSize
+        BRZ resetLoop # if 0, then list is full, exit loop
+        BRA inputLoop # otherwise ask for another input
+resetLoop LDA lda1 # load the instruction in lda1
+        STA load1 # store it in load1
+        ADD increment # add one to lda1 instruction
+        STA load2 # store this instruction in load2
+        LDA sta1 # load the store instruction from sta1
+        STA store1 # store it in store1
+        ADD increment # add 1 to it
+        STA store2 # store this new instruction in store2
+        LDA listSize # load list size (which should be 4 to start)
+        SUB increment # subtract 1
+        STA loopCount # store it in loopCount
+        LDA zero # load 0
+        STA isChange # store 0 in isChange
+load1   DAT 592 # execute "load from 92"
+        STA buffA # store value from 92 in buffA
+load2   DAT 593 # load second value by executing "load from 93"
+        STA buffB # store value in buffB
+cmp     SUB buffA # subtract what's in buffA
+        BRP nextItem # if positive, then buffA is smaller than buffB and they're in the right order so jump to nextItem
+swap    LDA buffB # load what's stored in buffB
+store1  DAT 392 # store it in 92
+        LDA buffA # load what's in buffA
+store2  DAT 393 # store it in 93, finishing the first swap
+        LDA increment # load increment (1)
+        STA isChange # set isChange to 1 
+nextItem LDA store1 # load what's in store1 (store instruction)
+        ADD increment # add 1 to instruction
+        STA store1 # store the instruction back into store1
+        ADD increment # add 1 again
+        STA store2 # store this instruction in store2
+        LDA load1 # load laod instruction from load1
+        ADD increment # add 1 to instruction
+        STA load1 # store it back in load1
+        ADD increment # add 1 again
+        STA load2 # store this instruction in load2
+        LDA loopCount # load loopCount
+        SUB increment # subtract 1
+        STA loopCount # store new loopCount
+        BRZ isFinished # if loopCount is 0, sorting is finished
+        BRA load1 # otherwise go back up to load1
+isFinished LDA isChange # load isChange
+        BRZ outputSum # if there was no change, branch to outputSum
+        BRA resetLoop # otherwise, keep sorting
+outputSum LDA sum # load sum
+        OUT # output sum
+outputList DAT 592 # execute "load what's in 92"
+        OUT # output whatever was in 92
+        LDA outputList # load outputList, which is a load instruction
+        ADD increment # add 1 to the instruction
+        STA outputList # store the new instruction back in outputList
+        LDA listSize # load listSize
+        SUB increment # subtract 1
+        STA listSize # store it back in listSize
+        BRZ end # if zero, end of list is reached so jump to end
+        BRA outputList # otherwise go back to outputList to keep outputting list
+end     LDA zero # load 0
+        STA sum # set sum to 0
+        STA loopCount # set loopCount to 0
+        STA listSize # set listSize to 0
+        STA isChange # set isChange to 0
+        STA buffA # set buffA to 0
+        STA buffB # set buffB to 0
+        BRA start # go back to start of program
+zero    DAT 0
+four    DAT 4
+sum     DAT 0
+buffA   DAT 0
+buffB   DAT 0
+isChange DAT 0
+increment DAT 1
+listSize DAT 0
+loopCount DAT 0
+sta1    DAT 392
+lda1    DAT 592
