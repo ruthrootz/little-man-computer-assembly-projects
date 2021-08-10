@@ -1,0 +1,95 @@
+        INP # NS green light time
+        STA NS_LIGHTTIME # store NS light time
+        STA NS_COPY # store copy for calculating 1/3 of NS time
+calc_third SUB THREE # subtract three from NS_COPY
+        STA NS_COPY # sotre the new NS_COPY
+        LDA THIRD # load THIRD
+        ADD ONE # add 1 to THIRD
+        STA THIRD # store updated THIRD
+        LDA NS_COPY # load NS_COPY
+        BRP calc_third # go back up to keep subtracting from NS_COPY if it's positive
+        INP # EW green light time
+        STA EW_LIGHTTIME # store EW light time
+S_RRGR_S LDA RRGR # load first state
+        OUT # output state
+        LDA EW_LIGHTTIME # load time for EW lights
+S_RRGR  SUB ONE # subtract one from light time
+        BRP S_RRGR # continue in state for another loop
+S_RRYR_S LDA RRYR # otherwise load next state
+        OUT # output state
+        LDA THREE # load THREE for yellow light time
+S_RRYR  SUB ONE # decrement THREE
+        BRZ S_LT_INPUT # if done with yellow time, go to next state
+        BRA S_RRYR # otherwise, continue in state
+S_LT_INPUT INP # take in LT option
+        BRZ S_GGRR_S # go to start of GGRR if no LT
+        SUB FIVE # check for next option
+        BRZ S_RBRG_S # go to start of RBRG if yes, south
+        SUB FIVE #check for next option
+        BRZ S_BRRG_S # go to start of BRRG if yes, north
+        BRA S_RRRG_S # go to start of S_RRRG if yes, both
+S_GGRR_S LDA GGRR # load sate
+        OUT # output sate
+        LDA NS_LIGHTTIME # load NS light time
+S_GGRR  SUB ONE # subtract one
+        BRZ S_YYRR_S # go to start of YYRR
+        BRA S_GGRR # continue in state
+S_YYRR_S LDA YYRR # load new state
+        OUT # output state
+        LDA THREE # load THREE for yellow light time
+S_YYRR  SUB ONE # decrement yellow light time
+        BRZ S_RRGR_S # if yellow done, branch to next state
+        BRA S_YYRR # otherwise, remain in state
+S_RBRG_S LDA RBRG # load state
+        OUT # output state
+        LDA THIRD # load THIRD for left turn time
+S_RBRG  SUB ONE # decrement time left
+        BRZ S_RBRY_S # if time is done, go to next state
+        BRA S_RBRG # otherwise, continue in state
+S_BRRG_S LDA BRRG # load state
+        OUT # output state
+        LDA THIRD # load THIRD for left turn time
+S_BRRG  SUB ONE # decrement time
+        BRZ S_BRRY_S # move to next state
+        BRA S_BRRG # or stay in state
+S_RRRG_S LDA RRRG # load state
+        OUT # output state
+        LDA THIRD # load THIRD for left turn time
+S_RRRG  SUB ONE # decrement time
+        BRZ S_RRRY_S # branch to next state
+        BRA S_RRRG # or continue in state
+S_RBRY_S LDA RBRY # load new state
+        OUT # output state
+        LDA THREE # load yellow time
+S_RBRY  SUB ONE # decrement time
+        BRZ S_GGRR_S # move to next state
+        BRA S_RBRY # or continue in current state
+S_BRRY_S LDA BRRY # load state
+        OUT # output state
+        LDA THREE # load THREE for yellow time
+S_BRRY  SUB ONE # decrement yellow time
+        BRZ S_GGRR_S # branch to next state
+        BRA S_BRRY # or continue in state
+S_RRRY_S LDA RRRY # load state
+        OUT # output state
+        LDA THREE # load THREE for yellow time
+S_RRRY  SUB ONE # decrement time
+        BRZ S_GGRR_S # move to next state
+        BRA S_RRRY # or stay in state
+RRGR    DAT 251
+RRYR    DAT 247
+GGRR    DAT 175
+RBRG    DAT 206
+BRRG    DAT 62
+RRRG    DAT 254
+YYRR    DAT 95
+RBRY    DAT 205
+BRRY    DAT 61
+RRRY    DAT 253
+FIVE    DAT 5
+THREE   DAT 3
+ONE     DAT 1
+NS_LIGHTTIME DAT 0
+EW_LIGHTTIME DAT 0
+THIRD   DAT 0
+NS_COPY DAT 0
