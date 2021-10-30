@@ -1,0 +1,17 @@
+loop      LDA first
+          ADD second
+          STA second
+          SUB first
+          STA first
+          OUT
+          LDA times
+          SUB one
+          STA times
+          BRZ end
+          BRA loop
+end       HLT
+
+first     DAT 1
+second    DAT 1
+times     DAT 13
+one       DAT 1
